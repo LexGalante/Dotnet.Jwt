@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs/Dotnet.Jwt/v16
+/src/Dotnet.Jwt.Api/bin/Debug/netcoreapp3.0
+/src/Dotnet.Jwt.Api/obj
+/UpgradeLog.htm
