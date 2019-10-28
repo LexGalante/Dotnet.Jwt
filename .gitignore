@@ -6,3 +6,8 @@
 /src/Dotnet.Jwt.Api/bin/Debug/netcoreapp3.0
 /src/Dotnet.Jwt.Api/obj
 /UpgradeLog.htm
+/.vs/Dotnet.Jwt/DesignTimeBuild
+/src/Dotnet.Jwt.Domain/bin/Debug/netcoreapp3.0
+/src/Dotnet.Jwt.Domain/obj
+/src/Dotnet.Jwt.Service/bin/Debug/netcoreapp3.0
+/src/Dotnet.Jwt.Service/obj

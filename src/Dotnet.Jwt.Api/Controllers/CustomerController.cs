@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Dotnet.Jwt.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,25 +16,30 @@ namespace Dotnet.Jwt.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<CustomerController> _logger;
         private readonly Settings _settings;
+        private readonly ICustomerService _customerService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger,
-            IOptions<Settings> options)
+        public CustomerController(ILogger<CustomerController> logger,
+            IOptions<Settings> options,
+            ICustomerService customerService)
         {
             _logger = logger;
             _settings = options.Value;
+            _customerService = customerService;
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Token([FromBody] string login, [FromBody] string password)
+        public IActionResult Token([FromBody] string email, [FromBody] string password)
         {
-            var user = Usuario.GetUserFake(login, password);
+            var customer = _customerService.Get()
+                                        .SingleOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
+
             var claims = new ClaimsIdentity();
-            claims.AddClaim(new Claim(ClaimTypes.Role, user.Roles.First().Name));
+            claims.AddClaim(new Claim(ClaimTypes.Role, customer.Roles.First().Name));
 
             var handler = new JwtSecurityTokenHandler();
 
@@ -52,19 +58,12 @@ namespace Dotnet.Jwt.Api.Controllers
                         SecurityAlgorithms.Aes128CbcHmacSha256)
             }));
 
-            return Ok(new 
+            return Ok(new
             {
                 AcessToken = token,
                 ExpiresAt = expiresAt
             });
         }
 
-        //Ao consumir este endpoint voce precisa enviar o header Authentication: Bearer <jwt_token>
-        [HttpGet]
-        [Authorize(Roles = "admin,xpto")]
-        public IActionResult Teste()
-        {
-            return Ok();
-        }
     }
 }

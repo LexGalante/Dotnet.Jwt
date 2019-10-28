@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dotnet.Jwt.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,8 @@ namespace Dotnet.Jwt.Api
             var settings = Configuration.GetSection("Settings").Get<Settings>();
 
             services.Configure<Settings>(Configuration.GetSection("Settings"));
+
+            services.AddTransient<ICustomerService, CustomerService>();
 
             services.AddAuthentication(x => 
             {
